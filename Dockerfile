@@ -28,8 +28,4 @@ WORKDIR /app
 
 RUN pip install -r requirements.txt
 
-# EXPOSE $PORT
-
-# CMD ["gunicorn", "main:app", "-b", "0.0.0.0:$PORT", "-w", "4"]
-
 CMD gunicorn main:app -b 0.0.0.0:$PORT -w 4
