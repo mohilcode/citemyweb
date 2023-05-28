@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="CiteMyWeb: A web citation service">
+    <title>CiteMyWeb</title>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #F2F2F2;
+        }
+
+        h1 {
+            color: #0074D9;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #AAA;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 50px;
+            padding: 10px 15px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url('data:image/svg+xml,<svg viewBox="0 0 4 5"><path d="M2 0L0 2h4zm0 5L0 3h4z" fill="%23888"/></svg>');
+            background-repeat: no-repeat;
+            background-position-x: calc(100% - 10px);
+            background-position-y: 15px;
+            background-size: 8px;
+        }
+
+        .btn-primary {
+            display: block;
+            width: 100%;
+            height: 50px;
+            background-color: #0074D9;
+            color: #FFF;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #00508C;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 30px;
+        }
+
+        li {
+            margin-bottom: 20px;
+        }
+
+        .copy-button {
+            display: inline-block;
+            background-color: #0074D9;
+            color: #FFF;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .copy-button:hover {
+            background-color: #00508C;
+        }
+
+        .error {
+            color: #FF4136;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CiteMyWeb</h1>
+
+    <form method="POST" action="/citation">
+        <div class="form-group">
+            <label for="url">Enter URL:</label>
+            <input type="text" id="url" name="url" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="style">Select citation style:</label>
+            <select id="style" name="style" class="form-control" required>
+                <option value="">Choose style</option>
+                <option value="apa-6th-edition">APA 6th Edition</option>
+                <option value="modern-language-association">MLA</option>
+                <option value="chicago-author-date">Chicago Author-Date</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+    
+
+    {% if citations %}
+        <h2>Saved Citations:</h2>
+        <ul>
+        {% for citation in citations %}
+            <li>{{ citation }}<button class="copy-button" data-citation="{{ citation }}">Copy</button></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% if error_message %}
+    <p class="error">Error: {{ error_message }}</p>
+    {% endif %}
+
+
+    <script>
+        const copyButtons = document.querySelectorAll('.copy-button');
+
+        copyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const citationText = button.dataset.citation;
+                const tempInput = document.createElement('input');
+                tempInput.setAttribute('value', citationText);
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+            });
+        });
+    </script>
+</body>
+</html>
