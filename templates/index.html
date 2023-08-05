@@ -1,158 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="CiteMyWeb: A web citation service">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CiteMyWeb</title>
-    <style>
-        body {
-    font-family: Arial, sans-serif;
-    background-color: #F2F2F2;
-        }
-
-        h1 {
-            color: #0074D9;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        form {
-            max-width: 500px;
-            margin: 0 auto;
-            background-color: #f8f9fa;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px #AAA;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .form-control {
-            width: 100%;
-            height: 50px;
-            padding: 10px 15px;
-            font-size: 18px;
-            border-radius: 5px;
-            border: 1px solid #ced4da;
-        }
-
-        select.form-control {
-            appearance: none;
-            background-image: url('data:image/svg+xml,<svg viewBox="0 0 4 5"><path d="M2 0L0 2h4zm0 5L0 3h4z" fill="%23888"/></svg>');
-            background-repeat: no-repeat;
-            background-position-x: calc(100% - 10px);
-            background-position-y: 15px;
-            background-size: 8px;
-        }
-
-        .btn-primary {
-            display: block;
-            width: 100%;
-            height: 50px;
-            background-color: #0074D9;
-            color: #FFF;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 20px;
-            font-weight: 600;
-            transition: background-color 0.2s;
-        }
-
-        .btn-primary:hover {
-            background-color: #00508C;
-        }
-
-        ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 30px;
-        }
-
-        li {
-            margin-bottom: 20px;
-        }
-
-        .copy-button {
-            display: inline-block;
-            background-color: #0074D9;
-            color: #FFF;
-            border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            margin-top: 20px;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-        .copy-button:hover {
-            background-color: #00508C;
-        }
-
-        .error {
-            color: #FF4136;
-            margin-top: 20px;
-            font-size: 18px;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/styles.css">
 </head>
+
 <body>
-    <h1>CiteMyWeb</h1>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">CITEMYWEB</h1>
+        <p class="text-center slogan">Accurate Citations For You</p>
 
-    <form method="POST" action="/citation">
-        <div class="form-group">
-            <label for="url">Enter URL:</label>
-            <input type="text" id="url" name="url" class="form-control" required>
+        <form method="POST" action="/citation">
+            <div class="form-group">
+                <label for="url" class="bold-label">Cite a Research Article</label>
+                <input type="text" id="url" name="url" class="form-control" placeholder="Enter the URL" required>
+            </div>
+            <div class="form-group">
+                <label for="style" class="bold-label">Citation Style</label>
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle btn-block" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        APA 7th edition
+                    </button>  
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item" href="#" data-value="american-chemical-society">American Chemical Society</a>
+                        <a class="dropdown-item" href="#" data-value="american-medical-association-10th-edition">AMA 10th edition</a>
+                        <a class="dropdown-item" href="#" data-value="apa-6th-edition">APA 6th edition</a>
+                        <a class="dropdown-item" href="#" data-value="apa">APA 7th edition</a>
+                        <a class="dropdown-item" href="#" data-value="american-sociological-association">ASA 6th edition</a>
+                        <a class="dropdown-item" href="#" data-value="chicago-author-date">Chicago (Author-Date)</a>
+                        <a class="dropdown-item" href="#" data-value="council-of-science-editors">Council of Science Editors</a>
+                        <a class="dropdown-item" href="#" data-value="council-of-science-editors-author-date">Council of Science Editors (Author-Date)</a>
+                        <a class="dropdown-item" href="#" data-value="harvard-cite-them-right">Harvard</a>
+                        <a class="dropdown-item" href="#" data-value="ieee">IEEE</a>
+                        <a class="dropdown-item" href="#" data-value="modern-language-association-8th-edition">MLA 8th edition</a>
+                        <a class="dropdown-item" href="#" data-value="modern-language-association">MLA 9th edition</a>
+                        <a class="dropdown-item" href="#" data-value="turabian-author-date">Turabian Author-Date</a>
+                        <a class="dropdown-item" href="#" data-value="vancouver">Vancouver</a>
+                    </div>
+                    <input type="hidden" id="style" name="style" value="apa" required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </form>
+
+        {% if error_message %}
+            <div class="alert alert-danger mt-4">{{ error_message }}</div>
+        {% endif %}
+
+        {% if citations %}
+            <h5 class="mt-4 bold-label">My Citations:</h5>
+            <div class="list-group mt-2">
+                {% for citation in citations %}
+                    <div class="list-group-item citation">
+                        <div class="overlay">
+                            <button class="btn btn-outline-primary btn-sm copy-button" data-citation="{{ citation }}">Copy</button>
+                        </div>
+                        <span class="citation-text">{{ citation }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <div aria-live="polite" aria-atomic="true" style="position: relative; min-height: 200px;">
+        <div class="toast" style="position: fixed; bottom: 20%; right: 50%; transform: translateX(50%);" data-delay="2000">
+            <div class="toast-body">
+                Copied to clipboard.
+            </div>
         </div>
-        <div class="form-group">
-            <label for="style">Select citation style:</label>
-            <select id="style" name="style" class="form-control" required>
-                <option value="">Choose style</option>
-                <option value="apa-6th-edition">APA 6th Edition</option>
-                <option value="modern-language-association">MLA</option>
-                <option value="chicago-author-date">Chicago Author-Date</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    
+    </div>
 
-    {% if citations %}
-        <h2>Saved Citations:</h2>
-        <ul>
-        {% for citation in citations %}
-            <li>{{ citation }}<button class="copy-button" data-citation="{{ citation }}">Copy</button></li>
-        {% endfor %}
-        </ul>
-    {% endif %}
-    {% if error_message %}
-    <p class="error">Error: {{ error_message }}</p>
-    {% endif %}
-
-
-    <script>
-        const copyButtons = document.querySelectorAll('.copy-button');
-
-        copyButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const citationText = button.dataset.citation;
-                const tempInput = document.createElement('input');
-                tempInput.setAttribute('value', citationText);
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
-            });
-        });
-    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="/static/scripts.js"></script>
 </body>
+
 </html>
