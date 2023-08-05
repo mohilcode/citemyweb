@@ -1,5 +1,9 @@
 FROM python:3.8-slim
 
+ARG FLASK_SECRET_KEY
+
+ENV FLASK_SECRET_KEY=$FLASK_SECRET_KEY
+
 RUN apt-get update && apt-get install -y \
     unzip \
     wget \
@@ -15,9 +19,12 @@ RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-ke
     apt-get -y update && \
     apt-get -y install google-chrome-stable
 
-RUN LATEST=`curl -sS https://chromedriver.storage.googleapis.com/LATEST_RELEASE` && \
-    echo "Installing chromium webdriver version ${LATEST}" && \
-    wget https://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip && \
+# Get the Chrome version
+RUN CHROME_VERSION=$(google-chrome-stable --version | awk '{ print $3 }' | cut -d '.' -f 1,2,3) && \
+    # Get the corresponding ChromeDriver version
+    CHROMEDRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION}") && \
+    echo "Installing chromium webdriver version ${CHROMEDRIVER_VERSION}" && \
+    wget "https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip" && \
     unzip chromedriver_linux64.zip && \
     mv chromedriver /usr/local/bin/chromedriver && \
     chown root:root /usr/local/bin/chromedriver && \
