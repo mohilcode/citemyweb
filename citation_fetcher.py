@@ -76,6 +76,8 @@ def get_citation(url, style):
         with urllib.request.urlopen(req) as f:
             citation = f.read().decode()
         citation = citation.replace("Crossref", "")
+        citation = citation.replace("<i>", "")
+        citation = citation.replace("</i>", "")
 
     except HTTPError as e:
         if e.code == 404:
