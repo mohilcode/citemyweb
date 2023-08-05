@@ -19,12 +19,12 @@ RUN curl -sS -o - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-ke
     apt-get -y update && \
     apt-get -y install google-chrome-stable
 
-RUN VERSION=114.0.5735.90 && \\ 
-    echo "Installing chromium webdriver version ${VERSION}" && \\ 
-    wget https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_linux64.zip && \\ 
-    unzip chromedriver_linux64.zip && \\ 
-    mv chromedriver /usr/local/bin/chromedriver && \\ 
-    chown root:root /usr/local/bin/chromedriver && \\ 
+RUN VERSION=114.0.5735.90 && \ 
+    echo "Installing chromium webdriver version ${VERSION}" && \
+    wget https://chromedriver.storage.googleapis.com/$VERSION/chromedriver_linux64.zip && \
+    unzip chromedriver_linux64.zip && \
+    mv chromedriver /usr/local/bin/chromedriver && \
+    chown root:root /usr/local/bin/chromedriver && \
     chmod +x /usr/local/bin/chromedriver
 
 
