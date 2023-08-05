@@ -1,15 +1,16 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
 from citation_fetcher import get_citation
 import os
 
 def app():
     app = Flask(__name__)
+    app.config['SECRET_KEY'] = os.urandom(24)  # Secret key is necessary for sessions to work
 
-    citations = []
     default_styles = {}
 
     @app.route("/")
     def index():
+        citations = session.get('citations', [])  # Get the citations from the session (or an empty list if not set)
         has_citations = bool(citations)
         return render_template("index.html", citations=citations, has_citations=has_citations, default_style=default_styles.get('default'))
 
@@ -21,16 +22,15 @@ def app():
         try:
             citation_text = get_citation(url, style)
         except ValueError as e:
-            return render_template("index.html", citations=citations, error_message=str(e), default_style=default_styles.get('default'))
+            return render_template("index.html", citations=session.get('citations', []), error_message=str(e), default_style=default_styles.get('default'))
 
+        # Get the current list of citations from the session, append the new citation, and then save it back to the session
+        citations = session.get('citations', [])
         citations.append(citation_text)
+        session['citations'] = citations
+
         return redirect(url_for('index'))
 
-    @app.route("/default-style", methods=["POST"])
-    def set_default_style():
-        default_style = request.form["default_style"]
-        default_styles['default'] = default_style
-        return redirect(url_for('index'))
 
     return app
 
